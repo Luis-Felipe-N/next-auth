@@ -2,14 +2,15 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { FormEvent, useState } from 'react'
-import { UseAuth } from '../context/AuthContext'
+import { useAuth } from '../context/AuthContext'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   const [email, setEmail] = useState('')  
   const [password, setPassword] = useState('')  
 
-  const {singIn} = UseAuth()
+  const { singIn } = useAuth();
+  console.log(singIn)
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
