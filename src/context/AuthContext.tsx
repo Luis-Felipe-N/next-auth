@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { api } from "../services/api";
 
-import { parseCookies, setCookie } from 'nookies'
+import { destroyCookie, parseCookies, setCookie } from 'nookies'
 
 interface singInCredentials {
     email: string;
@@ -29,12 +29,19 @@ interface IAuthProvider {
 
 const AuthContext = createContext({} as IAuthContext)
 
+export function signOut() {
+    destroyCookie(undefined, 'nextauth.token')
+    destroyCookie(undefined, 'nextauth.refreshToken')
+
+    Router.push('/')
+}
+
 export function AuthProvider({children}: IAuthProvider) {
     const [user, setUser] = useState<IUser>()
     const isAuthenticated = !!user
 
     useEffect(() => {
-        const { 'nextauth@token': token } = parseCookies()
+        const { 'nextauth.token': token } = parseCookies()
 
         if (token) {
             api.get('/me')
@@ -53,11 +60,11 @@ export function AuthProvider({children}: IAuthProvider) {
 
             const { token, refreshToken, permissions, roles } = response.data
 
-            setCookie(undefined, 'nextauth@token', token, {
+            setCookie(undefined, 'nextauth.token', token, {
                 maxAge: 60 * 60 * 24 * 30, // 30 dias
                 path: '/',
             })
-            setCookie(undefined, 'nextauth@refreshToken', refreshToken, {
+            setCookie(undefined, 'nextauth.refreshToken', refreshToken, {
                 maxAge: 60 * 60 * 24 * 30, // 30 dias
                 path: '/',
             })

@@ -10,7 +10,6 @@ const Home: NextPage = () => {
   const [password, setPassword] = useState('')  
 
   const { singIn } = useAuth();
-  console.log(singIn)
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
